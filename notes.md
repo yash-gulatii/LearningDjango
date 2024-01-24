@@ -1,5 +1,3 @@
-## Day 1 [14-12-23]
-
 ### What is Django?
 
 **Django**
@@ -108,3 +106,6 @@ A Django model is the built-in feature that Django uses to create tables, their 
 
 **These above code should be written in the applications `models.py` file**
 
+### Creating Generic relations in Django
+
+To make the tag app generic we are adding a app called content type which is build in the django. The importing the app we use it and get the content type of the object and the ID. Then we can relate it to the tags.

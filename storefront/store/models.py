@@ -6,17 +6,21 @@ from django.db import models
 class Promotion(models.Model):
     # Description of the promotion
     description = models.CharField(max_length=255)
-    discount = models.FloatField()
+    discount = models.FloatField()  # Discount for the promotion
 
 
 # Collection class which contains the information about a collection of a user
 class Collection(models.Model):
     title = models.CharField(max_length=255)  # Title/Name of the collection
+    featured_product = models.ForeignKey(
+        # Product added to the collection
+        'Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
 
 # Product class which stores the information about the product
 class Product(models.Model):
     title = models.CharField(max_length=225)  # Title/Name of the Product
+    slug = models.SlugField()  # Slug of the Product
     description = models.TextField()  # Description/About the Product
     price = models.DecimalField(
         max_digits=6, decimal_places=2)  # Price of the Prodcut
@@ -24,6 +28,7 @@ class Product(models.Model):
     inventory = models.IntegerField()
     # last update history of the Product
     last_update = models.DateTimeField(auto_now=True)
+    # Collection containing this product
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
     # Promotions which can be applied to the product (ManytoManyField)
     promotions = models.ManyToManyField(Promotion)
@@ -100,11 +105,16 @@ class Address(models.Model):
         Customer, on_delete=models.CASCADE, primary_key=True)
 
 
+# Cart class contains the information about the cart
 class Cart(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True)  # When the cart was created
 
 
+# CartItem class contains the information about the items present in the cart
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)  # Carts
+    # Products present in the cart
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # Number of item present in the cart
     quantity = models.PositiveSmallIntegerField()
